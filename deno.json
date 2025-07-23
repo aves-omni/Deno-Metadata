@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "tasks": {
+    "dev": "deno run --allow-net --allow-env --allow-read src/addon/index.ts"
+  },
+  "imports": {
+    "@mkcfdc/stremio-addon-sdk": "jsr:@mkcfdc/stremio-addon-sdk@^0.1.41"
+  }
+}

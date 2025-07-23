@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "dev": {
+      "cmd": "deno run --allow-net --allow-env --allow-read --env-file src/addon/index.ts"
+    }
+  },
+  "watch": true
+}

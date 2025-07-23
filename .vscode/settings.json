@@ -1,0 +1,10 @@
+{
+  // Make Prettier the only formatter VS Code will invoke
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // Trigger formatting every time you save
+  "editor.formatOnSave": true,
+  // Optional: format only supported languages
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
