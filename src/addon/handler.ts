@@ -1,18 +1,29 @@
-import { MetaDetail, Args } from "@mkcfdc/stremio-addon-sdk";
+import { MetaDetail, Args, MetaPreview } from "@mkcfdc/stremio-addon-sdk";
 
 import {
   fetchMovieData,
   fetchSeriesData,
+  fetchSearch,
   processTMDBResponse,
   getTmdbID,
 } from "../apis/tmdb.ts";
 
+export async function handleCatalogSearchRequest(
+    args: Args,
+  env: string
+): Promise<{ meta: MetaPreview[] | null }> {
+  let metas: MetaPreview[] = [];
+  return Promise.resolve({ meta: metas });
+}
+
 export async function handleMetadataRequest(
-  args: Args
+  args: Args,
+  env: string
 ): Promise<{ meta: MetaDetail | null }> {
   const { type, id } = args;
   const config = args.config || {};
-  const apiKey = config?.apiKeyTMDB || Deno.env.get("TMDB_API_KEY") || "";
+  const apiKey = config?.apiKeyTMDB || env;
+
   const preferredLanguage = config?.preferredLanguage || "en-US";
   console.log("Meta request received:", { type, id, config });
 
@@ -30,21 +41,21 @@ export async function handleMetadataRequest(
   let data;
   switch (type) {
     case "movie":
-      data = await fetchMovieData(apiKey, id, preferredLanguage);
+      data = await fetchMovieData(String(apiKey), id, String(preferredLanguage));
       // TODO data processing for movies
       break;
     case "series":
       if (id.startsWith("tt")) {
         // If the seriesId is an IMDB ID, convert it to TMDB ID
-        const tmdbID = await getTmdbID(apiKey, "tv", id);
+        const tmdbID = await getTmdbID(String(apiKey), "tv", id);
         console.log("Converted TMDB ID:", tmdbID);
         if (!tmdbID) {
           console.error("TMDB ID not found for series:", id);
           return { meta: null };
         }
-        data = await fetchSeriesData(apiKey, tmdbID, preferredLanguage);
+        data = await fetchSeriesData(String(apiKey), tmdbID, String(preferredLanguage));
       } else {
-        data = await fetchSeriesData(apiKey, id, preferredLanguage);
+        data = await fetchSeriesData(String(apiKey), id, String(preferredLanguage));
       }
       break;
     default:
@@ -56,7 +67,7 @@ export async function handleMetadataRequest(
     console.error(`No data found for ${type} with ID: ${id}`);
     return Promise.resolve({ meta: null });
   }
-  data = await processTMDBResponse(apiKey, data, type);
+  data = await processTMDBResponse(String(apiKey), data, type);
 
   return Promise.resolve({ meta: data as MetaDetail });
 }

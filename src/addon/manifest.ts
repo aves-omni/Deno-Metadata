@@ -24,38 +24,38 @@ export const manifest: Manifest = {
   resources: ["meta", "catalog"],
   types: ["movie", "series"],
   config: [
-    {
-      key: "apiKeyTMDB",
-      type: "text",
-      title: "TMDB API Key",
-      required: true,
-    },
-    {
-      key: "preferredLanguage",
-      type: "select",
-      title: "Preferred Language",
-      required: true,
-      options: ["en-US", "es-ES", "fr-FR"],
-    },
+    // {
+    //   key: "apiKeyTMDB",
+    //   type: "text",
+    //   title: "TMDB API Key",
+    //   required: true,
+    // },
+    // {
+    //   key: "preferredLanguage",
+    //   type: "select",
+    //   title: "Preferred Language",
+    //   required: true,
+    //   options: ["en-US", "es-ES", "fr-FR"],
+    // },
   ],
   idPrefixes: ["tmdb:", "tt"],
-  encryptionSecret: Deno.env.get("JWT_SECRET"),
+  // encryptionSecret: Deno.env.get("JWT_SECRET"),
   behaviorHints: {
     configurable: true,
     configurationRequired: false,
   },
   catalogs: [
-    {
-      id: "deno.search",
+{
+      id: "extra",
       type: "movie",
-      name: `TMDB | Search`,
-      extra: [{ name: "search", isRequired: true, options: [] }],
+      name: "Deno Search Movies",
+      extra: [{ name: "search", isRequired: true, options: [] }]
     },
     {
-      id: "deno.search",
+      id: "extra",
       type: "series",
-      name: `TMDB | Search`,
-      extra: [{ name: "search", isRequired: true, options: [] }],
+      name: "Deno Search Series",
+      extra: [{ name: "search", isRequired: true, options: [] }]
     },
   ],
 };

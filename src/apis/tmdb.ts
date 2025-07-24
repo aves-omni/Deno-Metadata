@@ -1,24 +1,13 @@
 import {
+  MetaVideo
+} from "@mkcfdc/stremio-addon-sdk";
+import {
   sortByVoteAverageAndCount,
   sortByVoteAverageCountAndAspectRatio,
   sortByAspectRatio,
 } from "../utils/sort.ts";
 
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
-
-interface VideoObject {
-  id: string;
-  name: string;
-  season: number;
-  number: number;
-  episode: number;
-  released: Date;
-  overview: string;
-  description?: string;
-  thumbnail?: string;
-  streams?: any[]; // Define streams or use appropriate type
-  firstAired?: string;
-}
 
 interface Video {
   iso_639_1: string;
@@ -134,7 +123,7 @@ export async function processTMDBResponse(
         : null,
     }));
 
-  let videos: VideoObject[] = [];
+  let videos: MetaVideo[] = [];
   if (type === "series") {
     console.log("Ep", jsonResp.episode_run_time);
     videos = await fetchEpisodes(
@@ -248,13 +237,29 @@ export async function getTmdbID(
   }
 }
 
+export async function fetchSearch(params: {
+  apiKey: string;
+  query: string;
+  type: "movie" | "tv";
+}) {
+  const { apiKey, query, type } = params;
+  const url = `${TMDB_BASE_URL}/search/${type}?api_key=${apiKey}&query=${query}&include_adult=false&language=en-US&page=1`;
+  const response = await fetch(url);
+  console.log("Search:", response)
+  if (!response.ok) {
+    throw new Error(`Failed to fetch movie. Status: ${response.status}`);
+  }
+
+  return response.json();
+}
+
 export async function fetchEpisodes(
   apiKey: string,
   seriesId: string,
   imdbId: string,
   numberOfSeasons: number
-): Promise<VideoObject[]> {
-  const videoObjects: VideoObject[] = [];
+): Promise<MetaVideo[]> {
+  const videoObjects: MetaVideo[] = [];
   const batchSize = 20; // Number of seasons per batch
 
   for (let i = 0; i < numberOfSeasons; i += batchSize) {
@@ -283,13 +288,13 @@ export async function fetchEpisodes(
       const seasonData = data[`season/${seasonNumber}`];
 
       for (const episode of seasonData.episodes) {
-        const videoObject: VideoObject = {
+        const videoObject: MetaVideo = {
           id: `${imdbId}:${seasonNumber}:${episode.episode_number}`,
           name: episode.name,
           season: seasonNumber,
           number: episode.episode_number,
           episode: episode.episode_number,
-          released: new Date(episode.air_date),
+          released: episode.air_date,
           overview: episode.overview,
           description: episode.overview,
           thumbnail: `https://image.tmdb.org/t/p/w500${episode.still_path}`,
