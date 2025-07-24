@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "0.1.0",
   "tasks": {
     "dev": "deno run --allow-net --allow-env --allow-read src/addon/index.ts"
   },
