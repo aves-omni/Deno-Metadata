@@ -7,10 +7,12 @@ config(); // Load all .env variables
 let version = "1.0.0";
 try {
   const denoConfig = JSON.parse(
-    Deno.readTextFileSync(new URL("../../../../deno.json", import.meta.url))
+    Deno.readTextFileSync(new URL("../../deno.json", import.meta.url))
   );
   if (denoConfig.version) version = denoConfig.version;
-} catch (_) {}
+} catch (error) {
+  console.error("Failed to read or parse deno.json:", error);
+}
 
 export const manifest: Manifest = {
   id: Deno.env.get("STREMIO_ADDON_ID") || "org.stremio.deno-metadata-addon",
@@ -23,10 +25,17 @@ export const manifest: Manifest = {
   types: ["movie", "series"],
   config: [
     {
-      key: "apiKey",
+      key: "apiKeyTMDB",
       type: "text",
       title: "TMDB API Key",
       required: true,
+    },
+    {
+      key: "preferredLanguage",
+      type: "select",
+      title: "Preferred Language",
+      required: true,
+      options: ["en-US", "es-ES", "fr-FR"],
     },
   ],
   idPrefixes: ["tmdb:", "tt"],
