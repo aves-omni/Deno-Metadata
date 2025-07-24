@@ -45,17 +45,17 @@ export const manifest: Manifest = {
     configurationRequired: false,
   },
   catalogs: [
-{
+    {
       id: "tmdb.search",
       type: "movie",
       name: "Deno Search Movies",
-      extra: [{ name: "search", isRequired: true, options: [] }]
+      extra: [{ name: "search", isRequired: true, options: [] }],
     },
     {
       id: "tmdb.search",
       type: "series",
       name: "Deno Search Series",
-      extra: [{ name: "search", isRequired: true, options: [] }]
+      extra: [{ name: "search", isRequired: true, options: [] }],
     },
   ],
 };

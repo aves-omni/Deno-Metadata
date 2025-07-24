@@ -9,7 +9,7 @@ import {
 } from "../apis/tmdb.ts";
 
 export async function handleCatalogSearchRequest(
-    args: Args,
+  args: Args,
   env: string
 ): Promise<{ meta: MetaPreview[] | null }> {
   let metas: MetaPreview[] = [];
@@ -41,7 +41,11 @@ export async function handleMetadataRequest(
   let data;
   switch (type) {
     case "movie":
-      data = await fetchMovieData(String(apiKey), id, String(preferredLanguage));
+      data = await fetchMovieData(
+        String(apiKey),
+        id,
+        String(preferredLanguage)
+      );
       // TODO data processing for movies
       break;
     case "series":
@@ -53,9 +57,17 @@ export async function handleMetadataRequest(
           console.error("TMDB ID not found for series:", id);
           return { meta: null };
         }
-        data = await fetchSeriesData(String(apiKey), tmdbID, String(preferredLanguage));
+        data = await fetchSeriesData(
+          String(apiKey),
+          tmdbID,
+          String(preferredLanguage)
+        );
       } else {
-        data = await fetchSeriesData(String(apiKey), id, String(preferredLanguage));
+        data = await fetchSeriesData(
+          String(apiKey),
+          id,
+          String(preferredLanguage)
+        );
       }
       break;
     default:

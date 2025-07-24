@@ -2,22 +2,30 @@
  * Deno Stremio Metadata Addon
  */
 
-import {
-  AddonBuilder,
-  serveHTTP,
-  Args,
-} from "@mkcfdc/stremio-addon-sdk";
+import { AddonBuilder, serveHTTP, Args } from "@mkcfdc/stremio-addon-sdk";
 import { manifest } from "./manifest.ts";
-import { handleMetadataRequest, handleCatalogSearchRequest } from "./handler.ts";
+import {
+  handleMetadataRequest,
+  handleCatalogSearchRequest,
+} from "./handler.ts";
 
 // Create the AddonBuilder
 const builder = new AddonBuilder(manifest);
 
 // TODO real catalogs, just an example for now
 builder.defineCatalogHandler(async (args: Args) => {
-  console.log("Catalog request received: ", args);
+  const { type, id, extra } = args;
+  console.log("Catalog request received:", { type, id, extra });
 
-  return await handleCatalogSearchRequest(args, Deno.env.get("TMDB_API_KEY") || "");
+  if (id === "tmdb.search") {
+    const searchQuery = extra?.search;
+    console.log(searchQuery);
+  }
+
+  return await handleCatalogSearchRequest(
+    args,
+    Deno.env.get("TMDB_API_KEY") || ""
+  );
 });
 
 builder.defineMetaHandler(async (args: Args) => {

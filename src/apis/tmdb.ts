@@ -1,6 +1,4 @@
-import {
-  MetaVideo
-} from "@mkcfdc/stremio-addon-sdk";
+import { MetaVideo } from "@mkcfdc/stremio-addon-sdk";
 import {
   sortByVoteAverageAndCount,
   sortByVoteAverageCountAndAspectRatio,
@@ -245,7 +243,7 @@ export async function fetchSearch(params: {
   const { apiKey, query, type } = params;
   const url = `${TMDB_BASE_URL}/search/${type}?api_key=${apiKey}&query=${query}&include_adult=false&language=en-US&page=1`;
   const response = await fetch(url);
-  console.log("Search:", response)
+  console.log("Search:", response);
   if (!response.ok) {
     throw new Error(`Failed to fetch movie. Status: ${response.status}`);
   }
